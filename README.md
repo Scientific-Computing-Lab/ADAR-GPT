@@ -1,4 +1,4 @@
-# CFT-RNA-Editing-Detection-using-GPT
+# ADAR-GPT
 
 ## Overview
 RNA editing is a crucial post-transcriptional mechanism that alters RNA sequences, impacting gene regulation and disease. This repository contains code for predicting adenosine-to-inosine (A-to-I) RNA editing sites using GPT-4o-mini with a continual fine-tuning (CFT) strategy.
