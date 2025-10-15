@@ -280,27 +280,28 @@ python Script/baselines/RNA-FM/rnafm_finetune_adar.py \
 
 ### Baseline Comparison (All Thresholds)
 
-| Threshold | Model | Best-F1 | t* | Accuracy | Recall | Specificity |
-|-----------|-------|---------|-----|----------|--------|-------------|
-| **1%** | EditPredict Pre-trained (both) | 0.6730 | 0.90 | 0.5211 | 0.9816 | 0.0571 |
-| | EditPredict Retrained (single) | 0.6956 | 0.16 | 0.6172 | 0.8714 | 0.3611 |
-| | EditPredict Retrained (both) | 0.6750 | 0.07 | 0.5211 | 0.9908 | 0.0478 |
-| | RNA-FM Fine-tuned (both) | 0.7054 | 0.74 | 0.5942 | 0.9678 | 0.2176 |
-| | **ADAR-GPT CFT (1%)** | **0.7956** | – | **0.7428** | **0.7248** | **0.7832** |
-| **5%** | EditPredict Pre-trained (both) | 0.6791 | 0.99 | 0.5503 | 0.9582 | 0.1481 |
-| | EditPredict Retrained (single) | 0.7145 | 0.04 | 0.6480 | 0.8870 | 0.4122 |
-| | EditPredict Retrained (both) | 0.6849 | 0.10 | 0.5657 | 0.9505 | 0.1863 |
-| | RNA-FM Fine-tuned (both) | 0.7149 | 0.91 | 0.6610 | 0.8560 | 0.4687 |
-| | **ADAR-GPT CFT (5%)** | **0.7994** | – | **0.7655** | **0.7946** | **0.7241** |
-| **10%** | EditPredict Pre-trained (both) | 0.6751 | 0.96 | 0.5288 | 0.9800 | 0.0783 |
-| | EditPredict Retrained (single) | 0.7400 | 0.06 | 0.6749 | 0.9262 | 0.4240 |
-| | EditPredict Retrained (both) | 0.6922 | 0.16 | 0.5803 | 0.9446 | 0.2166 |
-| | RNA-FM Fine-tuned (both) | 0.7207 | 0.91 | 0.6849 | 0.8138 | 0.5561 |
-| | **ADAR-GPT CFT (10%)** | **0.7751** | – | **0.7753** | **0.7444** | **0.8089** |
-| **15%** | EditPredict Pre-trained (both) | 0.6730 | 0.98 | 0.5273 | 0.9784 | 0.0810 |
-| | EditPredict Retrained (single) | 0.7751 | 0.18 | 0.7448 | 0.8841 | 0.6070 |
-| | EditPredict Retrained (both) | 0.7251 | 0.70 | 0.6749 | 0.8624 | 0.4893 |
-| | RNA-FM Fine-tuned (both) | 0.7542 | 0.97 | 0.7164 | 0.8748 | 0.5596 |
-| | **ADAR-GPT CFT (15%)** | **0.7735** | – | **0.7872** | **0.7358** | **0.8373** |
-| | ADAR-GPT SFT (15%) | 0.6871 | – | 0.7092 | 0.6468 | 0.7699 |
+**Note**: All metrics reported at fixed decision threshold of 0.5. Single-strand uses forward sequence only; both-strand averages forward and reverse-complement predictions.
 
+| Threshold | Model | F1 | Accuracy | Recall | Specificity |
+|-----------|-------|-----|----------|--------|-------------|
+| **1%** | EditPredict Pre-trained (single) | 0.8187 | 0.6946 | 0.9986 | 0.0162 |
+| | EditPredict Retrained (single) | **0.8427** | **0.7789** | 0.8579 | 0.6026 |
+| | EditPredict Retrained (both) | 0.8313 | 0.7328 | 0.9533 | 0.2407 |
+| | RNA-FM Fine-tuned (both) | 0.8200 | 0.6970 | **0.9997** | 0.0216 |
+| | **ADAR-GPT CFT (1%)** | 0.7956 | 0.7428 | 0.7248 | **0.7832** |
+| **5%** | EditPredict Pre-trained (single) | 0.7438 | 0.5948 | **1.0000** | 0.0162 |
+| | EditPredict Retrained (single) | 0.7969 | 0.7524 | 0.8262 | 0.6470 |
+| | EditPredict Retrained (both) | 0.7668 | 0.6705 | 0.9212 | 0.3125 |
+| | RNA-FM Fine-tuned (both) | 0.7575 | 0.6258 | 0.9935 | 0.1009 |
+| | **ADAR-GPT CFT (5%)** | **0.7994** | **0.7655** | 0.7946 | **0.7241** |
+| **10%** | EditPredict Pre-trained (single) | 0.6871 | 0.5260 | **1.0000** | 0.0119 |
+| | EditPredict Retrained (single) | 0.7403 | 0.7259 | 0.7508 | 0.6989 |
+| | EditPredict Retrained (both) | 0.7273 | 0.6628 | 0.8642 | 0.4445 |
+| | RNA-FM Fine-tuned (both) | 0.7169 | 0.5984 | 0.9775 | 0.1872 |
+| | **ADAR-GPT CFT (10%)** | **0.7751** | **0.7753** | 0.7444 | **0.8089** |
+| **15%** | EditPredict Pre-trained (single) | 0.6636 | 0.4995 | **1.0000** | 0.0118 |
+| | EditPredict Retrained (single) | 0.7255 | 0.7120 | 0.7712 | 0.6544 |
+| | EditPredict Retrained (both) | 0.6969 | 0.6313 | 0.8587 | 0.4097 |
+| | RNA-FM Fine-tuned (both) | 0.6936 | 0.5712 | 0.9836 | 0.1693 |
+| | **ADAR-GPT CFT (15%)** | **0.7735** | **0.7872** | 0.7358 | **0.8373** |
+| | ADAR-GPT SFT (15%) | 0.6871 | 0.7092 | 0.6468 | 0.7699 |
