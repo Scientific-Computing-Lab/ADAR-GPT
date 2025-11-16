@@ -3,32 +3,36 @@
 ## Overview
 RNA editing is a crucial post-transcriptional mechanism that alters RNA sequences, impacting gene regulation and disease. This repository contains code for predicting adenosine-to-inosine (A-to-I) RNA editing sites using GPT-4o-mini with a continual fine-tuning (CFT) strategy.
 
-We introduce a liver-specific dataset, where ADAR1 is the predominant enzyme, and train models progressively on editing thresholds (1%, 5%, 10%, 15%), improving classification accuracy compared to traditional fine-tuning methods.
+We introduce a liver-specific dataset derived from GTEx (n=131 samples), where ADAR1 is the predominant enzyme, enabling controlled analysis of ADAR1-mediated editing. Our two-stage continual fine-tuning approach first trains on curriculum data from all editing thresholds (1%→5%→10%→15%) followed by refinement on high-confidence 15% sites, achieving superior performance compared to static fine-tuning and established baselines.
 
 ### Key Contributions:
    - Liver-Specific RNA Editing Analysis: Avoiding confounding multi-tissue variability.
    - Continual Fine-Tuning (CFT): Training the model step-by-step from low (1%) to high (15%) editing levels.
    - Non-Overlapping Thresholds: Each site assigned a single editing category to improve classification accuracy.
-   - Improved Performance: Outperforms GPT-3.5 and static fine-tuning (SFT) models.
+   - Improved Performance: F1=76.3%, accuracy=75.9% at 15% threshold, outperforming CNN and foundation model baselines
 
 ## 🧬 Methodology
-Our approach focuses on improving RNA editing site prediction using transformer-based models, specifically **GPT-4o-mini**, in a **continual fine-tuning (CFT)** paradigm. This methodology allows the model to progressively learn from lower to higher editing thresholds (1%, 5%, 10%, 15%), refining its understanding of RNA editing patterns.
+Our approach improves RNA editing site prediction using **GPT-4o-mini** with a **two-stage continual fine-tuning (CFT)** paradigm. This methodology enables progressive learning from curriculum data across all thresholds before specializing on high-confidence editing sites.
 
-We trained the model using a **liver-specific dataset** derived from GTEx, ensuring minimal interference from non-relevant ADAR isoforms. The training procedure included:
+We trained the model using a **liver-specific dataset** derived from GTEx, ensuring minimal interference from non-ADAR1 isoforms. The training procedure included:
 
 A) **Data Collection & Preprocessing**
-   - Extracting double-stranded RNA (dsRNA) structures from Alu elements.
-   - Annotating editing levels based on GTEx liver data.
-   - Predicting RNA secondary structures using ViennaRNA(RNAfold) and converting into Vienna format.
+   - Identifying oppositely oriented Alu element pairs within UTRs to establish genomic context
+   - Quantifying editing levels for each adenosine from GTEx liver RNA-seq data (n=131 samples)
+   - Extracting 201-nucleotide windows centered on candidate adenosines (100 upstream + target + 100 downstream)
+   - Filtering for sites with >100 read coverage to ensure reliability
 
-   **Data Partitioning**
-   - Overlapping Sites: Multiple thresholds assigned per site (e.g., 1-5%, 5-10%).
-   - Non-Overlapping Sites: Each site belongs to one distinct threshold to ensure clearer distinctions.
+   **Data Partitioning: Non-Overlapping Threshold Groups**
+   Each adenosine site was assigned to exactly one threshold group based on its editing level:
+   - **1% group**: 1% ≤ editing < 5% (positives) vs. editing < 1% (negatives)
+   - **5% group**: 5% ≤ editing < 10% (positives) vs. editing < 5% (negatives)  
+   - **10% group**: 10% ≤ editing < 15% (positives) vs. editing < 10% (negatives)
+   - **15% group**: editing ≥ 15% (positives) vs. editing < 15% (negatives)
 
 B) **RNA Editing as a Classification Problem**
 
    - Framing RNA editing site prediction as a binary classification task.
-   - The model determines whether a given adenosine is edited (Yes/No) based on its sequence and structure.
+   - The model determines whether a given adenosine is edited (Yes/No) based on its sequence.
    - Training labels are derived from GTEx data, assigning a binary label to each adenosine.
 
 C) **Comparing Fine-Tuning Strategies (SFT vs. CFT)**
