@@ -132,13 +132,54 @@ This step:
 
 ## Inference
 
-The inference process differs based on the training methodology used. In CFT (Continual Fine-Tuning), inference is performed iteratively, where each model serves as the basis for fine-tuning the next model. The key distinction is that each inference step is applied to a different model fine-tuned on progressively refined data. This approach allows for continuous improvement in predictions across multiple runs. In contrast, SFT (Single Fine-Tuning) involves training a model directly on a dataset with a specific editing level, making inference a one-step process where the model is applied directly to new data without iterative refinements.
+The inference process evaluates your trained ADAR-GPT model on new RNA sequences and provides probability scores for editing prediction.
 
-To perform inference, navigate to the Script/inferencing directory and run the following command:
+### Prerequisites
+
+Before running inference, ensure you have:
+1. A fine-tuned ADAR-GPT model deployed on Azure OpenAI
+2. Azure OpenAI credentials configured (endpoint, API key, deployment name)
+3. Validation data in the correct JSONL format (from step 4 above)
+
+### Setting Up Azure Credentials
+
+Configure your Azure OpenAI environment using the provided script:
+```bash
+# Navigate to the inference directory
+cd Script/inferencing
+
+# Set up your Azure credentials (edit the script with your actual values)
+source set_azure_credentials.sh
 ```
- python inferencing.py <input_file> <output_file> <temperature> 
+
+The credentials script sets the following environment variables:
+- `AZURE_OPENAI_ENDPOINT` - Your Azure OpenAI resource endpoint
+- `AZURE_OPENAI_DEPLOYMENT` - Name of your deployed ADAR-GPT model  
+- `AZURE_OPENAI_API_VERSION` - Azure OpenAI API version
+- `AZURE_OPENAI_API_KEY` - Your Azure OpenAI access key
+
+### Running Inference
+
+To perform inference on your validation dataset, use the evaluation script:
+```bash
+python evaluation_script.py \
+  --dataset path/to/your_validation_trimmed.jsonl \
+  --log-file logs/model_predictions.jsonl \
+  --metrics-file logs/performance_metrics.json \
+  --positive-label "yes" \
+  --threshold 0.5 \
+  --rpm 10 \
+  --progress
 ```
-Input: The <input_file> is the file created in the Model_Input_Preparation_Classification.py step.
+
+**Parameter Explanation:**
+- `--dataset` - Path to your validation JSONL file (output from trim_jsonl.py)
+- `--log-file` - Where to save detailed per-example predictions  
+- `--metrics-file` - Where to save aggregate performance metrics
+- `--positive-label` - Label to treat as positive class ("yes" for editing sites)
+- `--threshold` - Decision threshold for binary classification (0.5 = 50%)
+- `--rpm` - Requests per minute (controls API rate limiting)
+- `--progress` - Show progress updates during inference
 
 ## Baseline Comparisons
 
@@ -173,10 +214,6 @@ pip install -e .
 - **Pre-trained**: Model trained on original authors' dataset . Quick to evaluate but may not generalize to your data.
 - **Retrained**: Model trained from scratch on your exact dataset. Provides fair comparison. In our experiments: pre-trained EditPredict (F1=0.67) vs retrained (F1=0.78).
 
-#### Both-Strand Scoring
-
-The `--both_strands` flag evaluates both forward sequence and reverse-complement, taking the maximum probability. This can improve recall but may increase false positives.
-
 ### 1. EditPredict Baseline
 
 #### Option A: Quick Evaluation (Pre-trained Model)
@@ -204,32 +241,7 @@ python Script/baselines/EditPredict/adar_gpt_vs_editpredict.py \
 - `editpredict_probs_valid.csv` – Probabilities for each site
 - `editpredict_metrics_valid.json` – Performance metrics
 
-#### Option B: Enhanced Evaluation
-
-**Script**: `adar_gpt_vs_editpredict_plus.py`
-
-**Input**: Same as Option A, plus:
-- `--both_strands`: (Optional) Evaluate both strand orientations
-
-**Command**:
-```bash
-python Script/baselines/EditPredict/adar_gpt_vs_editpredict_plus.py \
-  --train_jsonl path/to/train.jsonl \
-  --valid_jsonl path/to/valid.jsonl \
-  --editpredict_dir path/to/EditPredict \
-  --both_strands \
-  --outdir editpredict_plus_out
-```
-
-**Output**:
-- `probs.csv` – Raw probabilities
-- `metrics@0.5.json` – Metrics at threshold 0.5
-- `metrics@bestF1.json` – Best F1 score with optimal threshold
-- `threshold_sweep.csv` – Metrics across 101 thresholds
-- `roc_curve.csv` – ROC curve data
-- `pr_curve.csv` – Precision-Recall curve data
-
-#### Option C: Retrain on Your Data
+#### Option B: Retrain on Your Data
 
 **Script**: `retrain_editpredict_pipeline.py`
 
@@ -282,7 +294,6 @@ python Script/baselines/RNA-FM/rnafm_finetune_adar.py \
   --outdir rnafm_finetuned \
   --epochs 5 \
   --batch_size 32 \
-  --both_strands
 ```
 
 **Output**:
