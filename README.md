@@ -130,6 +130,14 @@ This step:
 - Pads with 'N' if insufficient flanking sequence
 - Removes structure information to focus on sequence-only input
 
+**Note**: Example files showing the expected input/output formats are provided in the `input_file/` directory. Use these as templates for your own data preparation.
+**File Naming Convention:**
+- `X_YP_*.jsonl`: Contains sites with X% ≤ editing < Y% (positives) vs. editing < X% (negatives)
+- `15P_*.jsonl`: Contains sites with editing ≥ 15% (positives) vs. editing < 15% (negatives)
+- `*_201L_*.jsonl`: Trimmed to 201-nucleotide windows, structure information removed
+- `CFT_*`: Combined curriculum dataset (all thresholds) for continual fine-tuning
+- `SFT_*`: Single threshold dataset for static fine-tuning
+
 ## Inference
 
 The inference process evaluates your trained ADAR-GPT model on new RNA sequences and provides probability scores for editing prediction.
