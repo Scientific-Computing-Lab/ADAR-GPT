@@ -1,1 +1,0 @@
-{"messages": [{"role": "system", "content": "Predict if the central adenosine (A) in the given RNA sequence context within an Alu element will be edited to inosine (I) by ADAR enzymes."}, {"role": "user", "content": "L:NA, A:A, R:NA, Alu Vienna Structure:NA"}, {"role": "assistant", "content": "NA"}]}
