@@ -83,39 +83,52 @@ python Classification_Data_Creation_Liver.py [-h] --pair_region PAIR_REGION --ou
 ```
 Outputs:
    - data_for_prepare_classification.csv – Processed classification data
+     
 
-### 2. Data Balancing by Editing Thresholds
+### 2. Non-Overlapping Threshold Groups
 
-Data balancing ensures equal representation of edited and non-edited sites across different editing levels, preventing bias in model training.
+Create balanced datasets where each adenosine site belongs to exactly one threshold group - 
+navigate to the Script/data_preparation directory and run the following command:
 
-#### Overlapping Sites
-
-To generate balanced classification datasets for different editing thresholds, navigate to the Script/data_preparation directory and run the following command:
 ```
-Rscript Division_thresholds_overlapping.R -i <input file(data_for_prepare_classification.csv)> -o < output_dir>
+Rscript build_equal_groups.R \
+  --input_csv data_for_prepare_classification.csv \
+  --output_dir Output directory for all CSVs
 ```
-This script divides the dataset into overlapping editing levels (1%, 5%, 10%, 15%) and ensures balanced distributions of edited and non-edited sites. The output consists of four files, each corresponding to a different threshold.
+This script partitions adenosines into four mutually exclusive groups:
+- **1% group**: 1% ≤ editing < 5% (positives) vs. editing < 1% (negatives)
+- **5% group**: 5% ≤ editing < 10% (positives) vs. editing < 5% (negatives)  
+- **10% group**: 10% ≤ editing < 15% (positives) vs. editing < 10% (negatives)
+- **15% group**: editing ≥ 15% (positives) vs. editing < 15% (negatives)
 
-#### Non-Overlapping Sites
-
-For non-overlapping classification thresholds, use the following command:
-```
-Rscript Division_thresholds_non_overlapping.R -i <input file(data_for_prepare_classification.csv)> -o < output_dir>
-```
-This script allows a site to belong to multiple editing level categories, resulting in four output files similar to the overlapping approach.
+**Output**: Four balanced CSV files, each containing equal numbers of positive and negative examples for the respective threshold.
 
 ### 3.Preparing Data for GPT Fine-Tuning
 
 To prepare the data for GPT fine-tuning, navigate to the Script/data_preparation directory and run the following command:
-```
-python Model_Input_Preparation_Classification.py <input_csv>
-```
-This script processes the classification dataset into a structured JSONL format for model training and evaluation.
-Outputs:
-   - train_<timestamp>.jsonl – Training dataset
-   - valid_<timestamp>.jsonl – Validation dataset
 
+```
+python csv_to_jsonl_GPT.py \
+  --input_csv  \
+  --output_jsonl
+```
 
+This creates structured conversations with:
+- **System prompt**: Task instruction for RNA editing prediction
+- **User input**: Sequence context with structure information
+- **Assistant response**: Binary classification (Yes/No for editing)
+
+### 4. Normalize Sequence Windows
+
+Trim sequences to standardized 201-nucleotide windows (100 upstream + target A + 100 downstream):
+```bash
+python python trim_jsonl.py <input.jsonl> <output.jsonl>
+```
+
+This step:
+- Extracts exactly 100 bases upstream and downstream of target adenosine
+- Pads with 'N' if insufficient flanking sequence
+- Removes structure information to focus on sequence-only input
 
 ## Inference
 
