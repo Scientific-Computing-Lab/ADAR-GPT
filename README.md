@@ -189,6 +189,50 @@ python evaluation_script.py \
 - `--rpm` - Requests per minute (controls API rate limiting)
 - `--progress` - Show progress updates during inference
 
+## Biological Validation
+
+Test the model's ability to capture known ADAR sequence preferences using controlled mutations.
+
+### Upstream G Avoidance Test
+
+Test ADAR's preference to avoid guanosine (G) immediately upstream of the editing site:
+```bash
+cd Script/biological_validation
+
+python test_upstream_g_avoidance.py \
+  input_validation.jsonl \
+  original_no_upstream_G.jsonl \
+  mutated_with_upstream_G.jsonl
+```
+
+This script:
+- Selects sites that naturally lack G at position -1
+- Creates original set (baseline) and mutated set (G forced at -1)
+- Expected result: Dramatic suppression of editing predictions in mutated set
+
+### Position Specificity Control
+
+Test model specificity using downstream position +5 (should show no effect):
+```bash
+python test_position_control.py \
+  input_validation.jsonl \
+  original_no_downstream_G.jsonl \
+  mutated_with_downstream_G.jsonl \
+  --offset 5
+```
+
+This script:
+- Tests G introduction at position +5 after central adenosine
+- Expected result: No significant performance difference between original vs. mutated
+- Confirms model's sensitivity is position-specific, not general G-content response
+
+### Running Validation
+```
+# Test both conditions and run inference
+python test_upstream_g_avoidance.py validation.jsonl upstream_orig.jsonl upstream_mut.jsonl
+python test_position_control.py validation.jsonl downstream_orig.jsonl downstream_mut.jsonl
+```
+
 ## Baseline Comparisons
 
 We provide scripts to compare ADAR-GPT against two state-of-the-art baselines: EditPredict (CNN) and RNA-FM (foundation model).
