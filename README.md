@@ -190,6 +190,11 @@ python evaluation_script.py \
 - `--rpm` - Requests per minute (controls API rate limiting)
 - `--progress` - Show progress updates during inference
 
+**Our Results:**
+The complete validation results from our experiments are organized in the `logs/` directory:
+- Model predictions: `logs/model_outputs/model_outputs_15_CFT_NoStructureonly100_FT15.jsonl` (CFT) and `model_outputs_15_SFT_NoStructureonly100.jsonl` (SFT)
+- Performance metrics: `logs/metrics/` (JSON files reporting accuracy, F1, AUROC, AUPRC, etc.)
+
 ## Biological Validation
 
 Test the model's ability to capture known ADAR sequence preferences using controlled mutations.
@@ -233,6 +238,18 @@ This script:
 python test_upstream_g_avoidance.py validation.jsonl upstream_orig.jsonl upstream_mut.jsonl
 python test_position_control.py validation.jsonl downstream_orig.jsonl downstream_mut.jsonl
 ```
+
+**Our Validation Results:**
+Complete results from our biological validation experiments are available in `logs/`:
+- Upstream G avoidance test: 
+  - Original: `model_outputs/model_outputs_without_G_1_up` and `metrics/metrics_without_G_1_up`
+  - Mutated (G at -1): `model_outputs/model_outputs_mutate_G_1_up` and `metrics/metrics_mutate_G_1_up`
+- Position +5 control test:
+  - Original: `model_outputs/model_outputs_without_G_5_down` and `metrics/metrics_without_G_5_down`
+  - Mutated (G at +5): `model_outputs/model_outputs_mutate_G_5_down` and `metrics/metrics_mutate_G_5_down`
+- G-only baseline classifier: `metrics/metrics_baseline_G.jsonl`
+
+These files contain the actual predictions and metrics reported in our manuscript (Table 3).
 
 ## Baseline Comparisons
 
@@ -356,6 +373,19 @@ python Script/baselines/RNA-FM/rnafm_finetune_adar.py \
 - `metrics@bestF1.json` – Best F1 performance
 - `threshold_sweep.csv` – Full threshold analysis
 - `roc_curve.csv`, `pr_curve.csv` – Performance curves
+
+**Our Baseline Results:**
+The complete baseline comparison results from our manuscript are available in:
+- Prediction probabilities: `logs/model_outputs/baseline_probs/`
+  - `editpredict_pretrained_probs.csv` (Pre-trained EditPredict)
+  - `editpredict_finetuned_probs.csv` (Retrained EditPredict)
+  - `rnafm_finetuned_probs.csv` (Fine-tuned RNA-FM)
+- Performance metrics: `logs/metrics/`
+  - `metrics_EditPredict_pretrain.json`
+  - `metrics_EditPredict_retrain.json`
+  - `metrics_RNA-FM.json`
+
+These correspond to the results reported in Table 1 of our manuscript.
 
 ## Performance
 
