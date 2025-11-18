@@ -197,7 +197,13 @@ The complete validation results from our experiments are organized in the `logs/
 
 ## Independent Test Set Evaluation
 
-To verify generalization to completely novel Alu sequences, we evaluated ADAR-GPT on 1,288 independent test examples from Sun et al. (Nature Biotechnology 2025) with no overlap to our training set.
+To verify generalization to completely novel Alu sequences, we evaluated ADAR-GPT on an independent test set from Sun et al. (Nature Biotechnology 2025):
+
+1. Selected 1,570 Alu pairs from their published dataset meeting criteria:
+   - Each Alu element appears in exactly one pair
+   - No overlap with our 905 training pairs
+2. Applied identical quality filters (coverage ≥100 reads, 15% editing threshold)
+3. Processed using the same data preparation pipeline (see Data Preparation section above)
 
 **Our Results:**
 - Model predictions: `logs/model_outputs/model_outputs_independent_alu`
