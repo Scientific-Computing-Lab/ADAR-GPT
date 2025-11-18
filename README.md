@@ -130,7 +130,8 @@ This step:
 - Pads with 'N' if insufficient flanking sequence
 - Removes structure information to focus on sequence-only input
 
-**Note**: Example files showing the expected input/output formats are provided in the `input_file/` directory. Use these as templates for your own data preparation.
+**Note**: Example files showing the expected input/output formats are provided in the `input_file/` directory. The provided files contain sample data (100-1,000 examples) for format demonstration. Use these as templates for your own data preparation.
+
 **File Naming Convention:**
 - `X_YP_*.jsonl`: Contains sites with X% ≤ editing < Y% (positives) vs. editing < X% (negatives)
 - `15P_*.jsonl`: Contains sites with editing ≥ 15% (positives) vs. editing < 15% (negatives)
@@ -369,3 +370,11 @@ python Script/baselines/RNA-FM/rnafm_finetune_adar.py \
 | EditPredict (Retrained) | Static 15% | 0.718 | 0.723 | 0.701 | 0.745 | 0.736 | 0.801 | 0.771 |
 | RNA-FM (Fine-tuned) | Static 15% | 0.709 | 0.590 | 0.989 | 0.185 | 0.552 | 0.713 | 0.681 |
 | EditPredict (Pre-trained) | Static 15% | 0.673 | 0.511 | 1.000 | 0.014 | 0.507 | 0.617 | 0.593 |
+
+### Performance Curves (ROC and Precision-Recall)
+
+![ROC Curves](Figure/liver_roc_curves.png)
+*Figure: ROC curves comparing ADAR-GPT variants against baseline models on 15% liver validation set.*
+
+![PR Curves](Figure/liver_pr_curves.png) 
+*Figure: Precision-Recall curves for the same comparison.*
