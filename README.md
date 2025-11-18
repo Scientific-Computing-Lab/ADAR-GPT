@@ -195,6 +195,23 @@ The complete validation results from our experiments are organized in the `logs/
 - Model predictions: `logs/model_outputs/model_outputs_15_CFT_NoStructureonly100_FT15.jsonl` (CFT) and `model_outputs_15_SFT_NoStructureonly100.jsonl` (SFT)
 - Performance metrics: `logs/metrics/` (JSON files reporting accuracy, F1, AUROC, AUPRC, etc.)
 
+## Independent Test Set Evaluation
+
+To verify generalization to completely novel Alu sequences, we evaluated ADAR-GPT on 1,288 independent test examples from Sun et al. (Nature Biotechnology 2025) with no overlap to our training set.
+
+**Our Results:**
+- Model predictions: `logs/model_outputs/model_outputs_independent_alu`
+- Performance metrics: `logs/metrics/metrics_independent_alu`
+
+## Curriculum vs. Random Order Control
+
+Control experiment: same 20,600 examples in random order + 15% refinement stage.
+
+**Our Results:**
+- `logs/model_outputs/model_outputs_shuff` (if exists)
+- `logs/metrics/metrics_shuff` (if exists)
+- 
+
 ## Biological Validation
 
 Test the model's ability to capture known ADAR sequence preferences using controlled mutations.
