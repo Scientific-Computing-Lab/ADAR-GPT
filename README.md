@@ -378,3 +378,19 @@ python Script/baselines/RNA-FM/rnafm_finetune_adar.py \
 
 ![PR Curves](Figure/liver_pr_curves.png) 
 *Figure: Precision-Recall curves for the same comparison.*
+
+
+Generate ROC and Precision-Recall curves comparing ADAR-GPT variants against baseline models:
+```bash
+cd Figure
+python generate_performance_curves.py
+```
+
+**Prerequisites:**
+- Model prediction outputs in `logs/model_outputs/` directory
+- Baseline prediction CSVs in `logs/model_outputs/baseline_probs/`
+
+**Outputs:**
+- `liver_roc_curves.png` - ROC curves for all models
+- `liver_pr_curves.png` - Precision-Recall curves for all models
+
